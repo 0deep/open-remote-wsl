@@ -25,7 +25,7 @@ export interface ServerInstallResult {
     arch: string;
     platform: string;
     tmpDir: string;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export class ServerInstallError extends Error {

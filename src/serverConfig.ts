@@ -2,11 +2,20 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 
-let vscodeProductJson: any;
-async function getVSCodeProductJson() {
+interface IProductJson {
+    commit: string;
+    quality: string;
+    release?: string;
+    serverApplicationName: string;
+    serverDataFolderName: string;
+    serverDownloadUrlTemplate?: string;
+}
+
+let vscodeProductJson: IProductJson | undefined;
+async function getVSCodeProductJson(): Promise<IProductJson> {
     if (!vscodeProductJson) {
         const productJsonStr = await fs.promises.readFile(path.join(vscode.env.appRoot, 'product.json'), 'utf8');
-        vscodeProductJson = JSON.parse(productJsonStr);
+        vscodeProductJson = JSON.parse(productJsonStr) as IProductJson;
     }
 
     return vscodeProductJson;

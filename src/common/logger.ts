@@ -1,5 +1,11 @@
 import * as vscode from 'vscode';
 
+type ErrorData = { success: boolean; message: string; };
+
+function isErrorData(data: unknown): data is ErrorData {
+    return typeof data === 'object' && data !== null && 'success' in data && 'message' in data;
+}
+
 type LogLevel = 'Trace' | 'Info' | 'Error';
 
 export default class Log {
@@ -9,29 +15,29 @@ export default class Log {
 		this.output = vscode.window.createOutputChannel(name);
 	}
 
-	private data2String(data: any): string {
+	private data2String(data: unknown): string {
 		if (data instanceof Error) {
 			return data.stack || data.message;
 		}
-		if (data.success === false && data.message) {
+		if (isErrorData(data) && data.success === false) {
 			return data.message;
 		}
-		return data.toString();
+		return String(data);
 	}
 
-	public trace(message: string, data?: any): void {
+	public trace(message: string, data?: unknown): void {
 		this.logLevel('Trace', message, data);
 	}
 
-	public info(message: string, data?: any): void {
+	public info(message: string, data?: unknown): void {
 		this.logLevel('Info', message, data);
 	}
 
-	public error(message: string, data?: any): void {
+	public error(message: string, data?: unknown): void {
 		this.logLevel('Error', message, data);
 	}
 
-	public logLevel(level: LogLevel, message: string, data?: any): void {
+	public logLevel(level: LogLevel, message: string, data?: unknown): void {
 		this.output.appendLine(`[${level}  - ${this.now()}] ${message}`);
 		if (data) {
 			this.output.appendLine(this.data2String(data));

@@ -121,7 +121,7 @@ export class WSLManager {
                 this.logger.error(`Error running WSL command: ${wslBinary} ${args.join(' ')}`, err);
                 reject(err);
             });
-            cmd.on('exit', (code, _signal) => {
+            cmd.on('exit', (code, _) => { // eslint-disable-line @typescript-eslint/no-unused-vars
                 resolve({ exitCode: code ?? 0 });
             });
         });

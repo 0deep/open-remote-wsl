@@ -51,8 +51,7 @@ export async function promptOpenRemoteWSLWindow(wslManager: WSLManager, useDefau
 
 export async function promptInstallNewWSLDistro(wslManager: WSLManager) {
 
-    let distroName: string | undefined;
-    distroName = (await showOnlineDistrosPicker(wslManager, 'Select the WSL distro to install'))?.name;
+    const distroName: string | undefined = (await showOnlineDistrosPicker(wslManager, 'Select the WSL distro to install'))?.name;
 
     if (!distroName) {
         return;

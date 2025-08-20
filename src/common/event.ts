@@ -3,7 +3,7 @@ export interface IDisposable {
   }
 
   export interface Event<T> {
-    (listener: (e: T) => any, thisArgs?: any, disposables?: IDisposable[]): IDisposable;
+    (listener: (e: T) => unknown, thisArgs?: unknown, disposables?: IDisposable[]): IDisposable;
   }
 
   /**
@@ -23,17 +23,17 @@ export interface IDisposable {
 
     return new Promise((resolve) => {
       const d2 = once(event, (data) => {
-        (signal as any).removeEventListener('abort', d1);
+        signal.removeEventListener('abort', d1);
         resolve(data);
       });
 
       const d1 = () => {
         d2.dispose();
-        (signal as any).removeEventListener('abort', d1);
+        signal.removeEventListener('abort', d1);
         resolve(undefined);
       };
 
-      (signal as any).addEventListener('abort', d1);
+      signal.addEventListener('abort', d1);
     });
   }
 
@@ -53,7 +53,7 @@ export interface IDisposable {
    * Base event emitter. Calls listeners when data is emitted.
    */
   export class EventEmitter<T> {
-    private listeners?: Array<(data: T) => void> | ((data: T) => void);
+    private listeners: Array<(data: T) => void> | ((data: T) => void) | undefined;
 
     /**
      * Event<T> function.
